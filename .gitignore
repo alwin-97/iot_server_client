@@ -1,5 +1,5 @@
 # remove the python cache files
-utlities/*.pyc
+utlities/__pycache__/
 
 # remove the database files
 *.db
