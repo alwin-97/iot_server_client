@@ -4,11 +4,11 @@
 #include <ArduinoJson.h>
 
 // WiFi credentials
-const char* ssid = "YOUR_WIFI_SSID";
-const char* password = "YOUR_WIFI_PASSWORD";
+const char* ssid = "<WifiName>";
+const char* password = "<WifiPassword>";
 
 // Server URL
-const char* serverName = "http://<YOUR_SERVER_IP>:5000/api/data";
+const char* serverName = "http://<ServerIP>:5000/api/data";
 
 // DHT sensor config
 #define DHTPIN D2       // GPIO4
@@ -62,8 +62,9 @@ void loop() {
 
   // Send HTTP POST request
   if (WiFi.status() == WL_CONNECTED) {
+    WiFiClient client;
     HTTPClient http;
-    http.begin(serverName);
+    http.begin(client, serverName);
     http.addHeader("Content-Type", "application/json");
 
     int httpResponseCode = http.POST(payload);
