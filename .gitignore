@@ -1,0 +1,9 @@
+# remove the python cache files
+utlities/*.pyc
+
+# remove the database files
+*.db
+
+# remove the virtual environment files
+venv/
+
