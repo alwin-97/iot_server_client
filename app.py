@@ -1,7 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from utlities import database
 from datetime import datetime
 from flasgger import Swagger
+from datetime import datetime
+import base64
+
 
 app = Flask(__name__)
 swagger = Swagger(app)
@@ -105,6 +108,21 @@ def get_user_readings(userid):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+
+@app.route('/capture/')
+def capture_page():
+    return render_template('capture.html')
+
+@app.route('/upload/', methods=['POST'])
+def upload():
+    data = request.json['image']
+    header, encoded = data.split(",", 1)
+    image_data = base64.b64decode(encoded)
+
+    with open('media/'+datetime.now().__str__()+'.png', 'wb') as f:
+        f.write(image_data)
+
+    return jsonify({"message": "Image received and saved!"})
 
 
 if __name__ == '__main__':

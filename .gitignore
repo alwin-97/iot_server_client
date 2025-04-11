@@ -7,3 +7,5 @@ utlities/__pycache__/
 # remove the virtual environment files
 venv/
 
+# exclude the following folders to be tracked
+media
