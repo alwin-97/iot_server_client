@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+</head>
+
+<body class="vh-100">
+
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="card p-4" style="width: 50rem;">
+            <div class="text-center">
+                <h1>Register to HMS</h1>
+                <p class="text-muted small mb-4">
+                    Register to HMS, to create an account using your face id to track your health status.
+                </p>
+
+                {% for m in get_flashed_messages() %}
+                <p style="color:red" class="p-3">{{ m }}</p>
+                {% endfor %}
+
+                <form action="/register" class="row m-0 text-start" method="POST" id="reg-form" name="reg-form"
+                    enctype="multipart/form-data">
+                    <div class="col-6 mb-3">
+                        <label for="name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label for="email" class="form-label">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" required>
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label for="device_serial_number" class="form-label">Device Serial Number</label>
+                        <input type="text" class="form-control" id="device_serial_number" name="device_serial_number"
+                            required>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <div id="hidden"></div>
+                        <video id="video" width="320" height="240" autoplay></video> <br />
+                        <button type="button" id="snap">Capture Face Sample</button>
+                        <span id="count">0/10</span><br><br>
+                    </div>
+
+                    <div class="col-12 mb-3 text-center">
+                        <button id="snap" class="btn btn-primary">Proceed for Registeration</button>
+                    </div>
+                </form>
+
+            </div>
+            <div class="small text-muted text-center mt-3">
+                Have an account?
+                <a href="/" class="">Login</a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+    <script>
+        const video = document.getElementById('video');
+        const snap = document.getElementById('snap');
+        const imgIn = document.getElementById('image');
+        const form = document.getElementById('reg-form');
+
+        let captured = 0, maxSamples = 10;
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(s => video.srcObject = s);
+
+        snap.onclick = () => {
+            if (captured >= maxSamples) return;
+            const canvas = document.createElement('canvas');
+            const W = 160, H = 120;
+            canvas.width = W; canvas.height = H;
+            canvas.getContext('2d').drawImage(video, 0, 0, W, H);
+            const dataURL = canvas.toDataURL('image/jpeg', 0.6);
+            const inp = document.createElement('input');
+            inp.type = 'hidden'; inp.name = 'images'; inp.value = dataURL;
+            hidden.appendChild(inp);
+            captured++;
+            count.textContent = `${captured}/${maxSamples}`;
+            if (captured === maxSamples) submit.disabled = false;
+        };
+    </script>
+</body>
+
+</html>

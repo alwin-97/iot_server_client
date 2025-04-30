@@ -9,3 +9,6 @@ venv/
 
 # exclude the following folders to be tracked
 media
+
+trainer.yml
+face_data

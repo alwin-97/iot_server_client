@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>HMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
+</head>
+
+<body class="vh-100">
+
+    <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+        <div class="card p-4" style="width: 50rem;">
+            <div class="text-center">
+                <h1>Login to HMS</h1>
+                <p class="text-muted small">
+                    Login to your account using your face id to track your health status.
+                </p>
+
+                {% for m in get_flashed_messages() %}
+                <p style="color:red" class="p-3">{{ m }}</p>
+                {% endfor %}
+
+                <form id="login" class="mb-3" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="image" id="image">
+                    <video id="video" autoplay width="320" height="240"></video><br>
+                    <button type="button" class="btn btn-primary mt-3" id="snap">Snap & Login</button>
+                </form>
+
+            </div>
+            <div class="small text-muted text-center mt-3">
+                Dont have an account?
+                <a href="/register" class="">Register</a>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq"
+        crossorigin="anonymous"></script>
+
+    <script>
+        const video = document.getElementById('video'),
+            snap = document.getElementById('snap'),
+            imgIn = document.getElementById('image'),
+            form = document.getElementById('login');
+
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(s => video.srcObject = s);
+
+        snap.onclick = () => {
+            const canvas = document.createElement('canvas');
+            // 2) downscale
+            const W = 160, H = 120;
+            canvas.width = W; canvas.height = H;
+            canvas.getContext('2d').drawImage(video, 0, 0, W, H);
+
+            // 3) compress as JPEG
+            const dataURL = canvas.toDataURL('image/jpeg', 0.6);
+            imgIn.value = dataURL;
+            
+            form.submit();
+        };
+    </script>
+</body>
+
+</html>
